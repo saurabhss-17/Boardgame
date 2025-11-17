@@ -52,7 +52,7 @@
       <scope>runtime</scope>
     </dependency>
 
-    <!-- Lombok -->
+    <!-- Lombok (Java 17 compatible) -->
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
@@ -82,6 +82,13 @@
         <version>3.11.0</version>
         <configuration>
           <release>17</release>
+          <annotationProcessorPaths>
+            <path>
+              <groupId>org.projectlombok</groupId>
+              <artifactId>lombok</artifactId>
+              <version>1.18.30</version>
+            </path>
+          </annotationProcessorPaths>
         </configuration>
       </plugin>
 
