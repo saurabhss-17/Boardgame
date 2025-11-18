@@ -9,7 +9,7 @@ pipeline {
 
   environment {
     DOCKERHUB_CREDENTIALS = "docker_hub_cred"
-    DOCKERHUB_REPO        = "jayu3110/boardgame-listing"
+    DOCKERHUB_REPO        = "saurabhdevops17/boardgame-listing"
     IMAGE_NAME            = "boardgame-listing"
     IMAGE_TAG             = "${env.GIT_COMMIT.take(7)}"
     SONARQUBE_ENV         = 'MySonarQubeServer'
@@ -23,7 +23,7 @@ pipeline {
     stage('Checkout') {
       steps {
         git branch: 'main',
-            url: 'https://github.com/JK00119500/boardgame.git'
+            url: 'https://github.com/saurabhss-17/Boardgame.git'
       }
     }
 
