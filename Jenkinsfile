@@ -69,17 +69,17 @@ pipeline {
       }
     }
 
-    // stage('Trivy scan') {
-    //   steps {
-    //     sh '''
-    //       docker run --rm --name trivy-cli \
-    //         -v /var/run/docker.sock:/var/run/docker.sock \
-    //         -u root \
-    //         aquasec/trivy:latest image \
-    //         ${IMAGE_NAME}:latest
-    //     '''
-    //   }
-    // }
+    stage('Trivy scan') {
+      steps {
+        sh '''
+          docker run --rm --name trivy-cli \
+            -v /var/run/docker.sock:/var/run/docker.sock \
+            -u root \
+            aquasec/trivy:latest image \
+            ${IMAGE_NAME}:latest
+        '''
+      }
+    }
 
     // stage('SonarQube Analysis') {
     //   steps {
@@ -93,17 +93,17 @@ pipeline {
     //   }
     // }
 
-    // stage('OWASP Dependency-Check Vulnerabilities') {
-    //   steps {
-    //     dependencyCheck additionalArguments: '''
-    //       -o './'
-    //       -s './'
-    //       -f 'ALL'
-    //       --prettyPrint''',
-    //       odcInstallation: 'owasp-DC'
-    //     dependencyCheckPublisher pattern: 'dependency-check-report.xml'
-    //   }
-    // }
+    stage('OWASP Dependency-Check Vulnerabilities') {
+      steps {
+        dependencyCheck additionalArguments: '''
+          -o './'
+          -s './'
+          -f 'ALL'
+          --prettyPrint''',
+          odcInstallation: 'owasp-DC'
+        dependencyCheckPublisher pattern: 'dependency-check-report.xml'
+      }
+    }
 
     stage('Deploy to EKS') {
       steps {
