@@ -42,12 +42,12 @@ pipeline {
           ls -lrt
 
           # Build local image
-          sudo docker build --no-cache -t ${IMAGE_NAME}:latest .
+          docker build --no-cache -t ${IMAGE_NAME}:latest .
 
           ls -lrt target
 
           # Tag for Docker Hub
-          sudo docker tag ${IMAGE_NAME}:latest ${DOCKERHUB_REPO}:latest
+          docker tag ${IMAGE_NAME}:latest ${DOCKERHUB_REPO}:latest
         """
       }
     }
