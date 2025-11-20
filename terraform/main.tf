@@ -35,22 +35,14 @@ provider "kubernetes" {
 }
 
 # Allow HTTP-style access on port 8080 from anywhere to the Load Balancer SG
-resource "aws_security_group_rule" "lb_public_ingress_8080" {
-  type              = "ingress"
-  from_port         = 8080
-  to_port           = 8080
-  protocol          = "tcp"
-  security_group_id = "sg-068b519bad73771fa"
-  cidr_blocks       = ["0.0.0.0/0"]
-  description       = "Allow public access to Load Balancer on 8080"
-}
+
 
 resource "aws_security_group_rule" "lb_public_ingress_https" {
   type              = "ingress"
   from_port         = 443
   to_port           = 443
   protocol          = "tcp"
-  security_group_id = "sg-068b519bad73771fa"
+  security_group_id = module.eks.node_security_group_id
   cidr_blocks       = ["0.0.0.0/0"]
   description       = "Allow public HTTPS access to Load Balancer"
 }

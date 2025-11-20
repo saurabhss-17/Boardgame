@@ -11,7 +11,7 @@ module "eks" {
   # EKS API endpoint access
   cluster_endpoint_public_access       = true
   cluster_endpoint_private_access      = true
-  # Demo साठी open; real मध्ये इथे तुमचा office / Jenkins IP / VPN द्यायचा
+  
   cluster_endpoint_public_access_cidrs = ["0.0.0.0/0"]
 
   # Managed node group
@@ -42,7 +42,7 @@ module "eks" {
 
   access_entries = {
     jenkins_admin = {
-      principal_arn = "arn:aws:iam::599801266123:user/boardgame-terraform"
+      principal_arn = "arn:aws:iam::903467494111:role/march-2025-eks-role"
 
       policy_associations = {
         admin = {
