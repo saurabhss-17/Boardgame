@@ -59,21 +59,25 @@ pipeline {
         }
 
         stage('SonarQube Analysis') {
-    steps {
-        withSonarQubeEnv("${SONARQUBE_ENV}") {
-            withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
-                sh """
-                    echo "DEBUG: Token length = \${#SONAR_TOKEN}"
+            steps {
+                withCredentials([
+                    string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')
+        ]) {
+      sh '''
+        echo "=== Testing Sonar token authentication ==="
+        HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" -u "${SONAR_TOKEN}:" http://host.docker.internal:9000/api/server/version)
+        echo "HTTP Status from SonarQube API: $HTTP_CODE"
+      '''
 
-                    mvn clean verify sonar:sonar \
-                      -Dsonar.projectKey=Boardgame \
-                      -Dsonar.projectName=Boardgame \
-                      -Dsonar.host.url=$SONAR_HOST_URL \
-                      -Dsonar.login=$SONAR_TOKEN
-                """
-            }
-        }
+      sh """
+        mvn clean verify sonar:sonar \
+          -Dsonar.projectKey=Boardgame \
+          -Dsonar.projectName='Boardgame' \
+          -Dsonar.host.url=http://host.docker.internal:9000 \
+          -Dsonar.login=${SONAR_TOKEN}
+      """
     }
+  }
 }
 
         stage('Quality Gate') {
