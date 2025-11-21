@@ -59,18 +59,22 @@ pipeline {
         }
 
         stage('SonarQube Analysis') {
-            steps {
-                withSonarQubeEnv("${SONARQUBE_ENV}") {
-                    sh """
-                        mvn clean verify sonar:sonar \
-                          -Dsonar.projectKey=Boardgame \
-                          -Dsonar.projectName='Boardgame' \
-                          -Dsonar.host.url=$SONAR_HOST_URL \
-                          -Dsonar.login=$SONAR_AUTH_TOKEN
-                    """
-                }
+    steps {
+        withSonarQubeEnv("${SONARQUBE_ENV}") {
+            withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
+                sh """
+                    echo "DEBUG: Token length = \${#SONAR_TOKEN}"
+
+                    mvn clean verify sonar:sonar \
+                      -Dsonar.projectKey=Boardgame \
+                      -Dsonar.projectName=Boardgame \
+                      -Dsonar.host.url=$SONAR_HOST_URL \
+                      -Dsonar.login=$SONAR_TOKEN
+                """
             }
         }
+    }
+}
 
         stage('Quality Gate') {
             steps {
