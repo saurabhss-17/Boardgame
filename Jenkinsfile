@@ -57,6 +57,17 @@ pipeline {
                 }
             }
         }
+        stage('Trivy scan') {
+            steps {
+                sh '''
+                docker run --rm --name trivy-cli \
+                    -v /var/run/docker.sock:/var/run/docker.sock \
+                    -u root \
+                    aquasec/trivy:latest image \
+                    ${IMAGE_NAME}:latest
+                '''
+            }
+            }
 
         stage('SonarQube Analysis') {
             steps {
