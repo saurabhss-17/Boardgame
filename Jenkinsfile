@@ -58,39 +58,39 @@ pipeline {
             }
         }
 
-//         stage('SonarQube Analysis') {
-//             steps {
-//                 withCredentials([
-//                     string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')
-//         ]) {
-//       sh '''
-//         echo "=== Testing Sonar token authentication ==="
-//         HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" -u "${SONAR_TOKEN}:" http://host.docker.internal:9000/api/server/version)
-//         echo "HTTP Status from SonarQube API: $HTTP_CODE"
-//       '''
+        stage('SonarQube Analysis') {
+            steps {
+                withCredentials([
+                    string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')
+        ]) {
+      sh '''
+        echo "=== Testing Sonar token authentication ==="
+        HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" -u "${SONAR_TOKEN}:" http://host.docker.internal:9000/api/server/version)
+        echo "HTTP Status from SonarQube API: $HTTP_CODE"
+      '''
 
-//       sh """
-//         mvn clean verify sonar:sonar \
-//           -Dsonar.projectKey=Boardgame \
-//           -Dsonar.projectName='Boardgame' \
-//           -Dsonar.host.url=http://host.docker.internal:9000 \
-//           -Dsonar.login=${SONAR_TOKEN}
-//       """
-//     }
-//   }
-// }
-//         stage('OWASP Dependency-Check Vulnerabilities') {
-//             steps {
-//                 dependencyCheck additionalArguments: '''
-//                     -o './'
-//                     -s './'
-//                     -f 'ALL'
-//                     --prettyPrint
-//                 ''',
-//                 odcInstallation: 'owasp-DC'
-//                 dependencyCheckPublisher pattern: 'dependency-check-report.xml'
-//             }
-//         }
+      sh """
+        mvn clean verify sonar:sonar \
+          -Dsonar.projectKey=Boardgame \
+          -Dsonar.projectName='Boardgame' \
+          -Dsonar.host.url=http://host.docker.internal:9000 \
+          -Dsonar.login=${SONAR_TOKEN}
+      """
+    }
+  }
+}
+        stage('OWASP Dependency-Check Vulnerabilities') {
+            steps {
+                dependencyCheck additionalArguments: '''
+                    -o './'
+                    -s './'
+                    -f 'ALL'
+                    --prettyPrint
+                ''',
+                odcInstallation: 'owasp-DC'
+                dependencyCheckPublisher pattern: 'dependency-check-report.xml'
+            }
+        }
 
         stage('Deploy to EKS') {
             steps {
